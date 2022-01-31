@@ -40,12 +40,41 @@ const getCountryData = function(country){
     ).then(response =>response.json()).then(data => renderCountery(data, 'neighbour'));
 };
 
-btn.addEventListener('click', function(){
-    getCountryData('pakistan');
+const getPositon = function(){
+  return new Promise(function(resolve, reject){
+    navigator.geolocation.getCurrentPosition(resolve, reject );
+    // position => resolve(position), err => reject(err)
+   
+  });
+};
+ getPositon().then(pos => console.log(pos));
+
+
+const whereAmI = function(){
+
+  
+   getPositon().then(pos => {
+    const {latitude: lat,  langitude: lng} =  pos.coords;
+    return  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+  }).then(res => res.json()).then(data => {
+  console.log(data);
+  console.log(`You are in ${data.city}, ${data.country}`);
+  return  fetch(`https://restcountries.com/v2/name/${data.country}`);
+  } ).then(res => {
+      if (!res.ok) throw new Error(`Countery not found (${res.status})`);
+      return res.json();
+  }).then(data => renderCountery(data[0])).catch(err => console.error(`${err.massage} `));
+};
+
+
+btn.addEventListener('click', whereAmI);
+  
     // getCountryData('nepal');
     // getCountryData('sri lanka');
     // getCountryData('bangladesh');
     // getCountryData('iran');
     // getCountryData('Republic of India   ');
-});
+
+
+
 
