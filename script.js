@@ -3,7 +3,7 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
-///////////////////////////////////////
+// ///////////////////////////////////////
 const renderCountery= function(data, className = ''){
   const html = `<article class="country ${className}+">
     <img class="country__img" src="${data.flag}" />
